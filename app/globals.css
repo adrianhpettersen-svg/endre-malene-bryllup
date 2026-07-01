@@ -25,18 +25,9 @@ a { color: inherit; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
 .gallery-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px 90px; }
 
-/* Header / E&M-monogram (sort-på-hvit) */
+/* Header / offisiell E&M-logo (sort-på-hvit) */
 .brand { text-align: center; margin-bottom: 26px; }
-.brand .badge {
-  width: 108px; height: 108px; margin: 0 auto 14px;
-  border: 1.5px solid var(--ink); border-radius: 50%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-family: Georgia, "Times New Roman", serif;
-}
-.brand .badge .top { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; }
-.brand .badge .mono { font-size: 34px; font-style: italic; line-height: 1; margin: 3px 0; }
-.brand .badge .date { font-size: 8px; letter-spacing: 2px; }
-.brand h1 { font-family: Georgia, serif; font-weight: 500; font-size: clamp(24px, 5vw, 34px); margin: 6px 0 4px; }
+.brand .logo { display: block; margin: 6px auto 12px; height: auto; width: 152px; max-width: 60%; }
 .brand p { color: var(--muted); margin: 0; font-size: 15px; }
 
 /* Opplasting */
