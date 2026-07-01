@@ -31,6 +31,7 @@ export default function Home() {
         await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/upload',
+          multipart: true, // laster store videoer opp i deler → robust, ingen timeout
           onUploadProgress: (p) => set({ pct: Math.round(p.percentage) }),
         });
         set({ status: 'ferdig', pct: 100 });
