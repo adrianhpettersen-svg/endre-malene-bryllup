@@ -5,7 +5,15 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const { blobs } = await list({ limit: 1000 });
+    // Bla gjennom ALLE sider (Blob returnerer maks 1000 per kall)
+    const blobs: Awaited<ReturnType<typeof list>>['blobs'] = [];
+    let cursor: string | undefined;
+    for (;;) {
+      const res = await list({ limit: 1000, cursor });
+      blobs.push(...res.blobs);
+      if (!res.hasMore) break;
+      cursor = res.cursor;
+    }
     const items = blobs
       .map((b) => ({
         url: b.url,

@@ -29,5 +29,14 @@ npm run dev            # → http://localhost:3000
   thumbnails (Next Image) så dataoverføring holdes lav. Pro-plan ($20/mnd) gir trygg
   buffer for bryllupsmåneden — kan sies opp etterpå.
 
+## Laste ned bildene
+- **Enkeltvis:** i galleriet → klikk et bilde/video → **«Last ned original»**.
+- **Alt på én gang:** kjør skriptet (blobene er offentlige — ingen token trengs):
+  ```bash
+  node last-ned-alt.mjs        # → laster alt til ./nedlastet/
+  ```
+  Kan kjøres flere ganger; hopper over filer du allerede har.
+- **Via Vercel:** Storage → [Blob-store] → Browse (last ned enkeltfiler).
+
 ## Etter bryllupet
-Last ned alt (Blob-dashboard eller `list()` + nedlasting), så kan Blob-storen tømmes/Pro sies opp.
+Kjør `node last-ned-alt.mjs` for å hente alt, så kan Blob-storen tømmes og Pro sies opp.
