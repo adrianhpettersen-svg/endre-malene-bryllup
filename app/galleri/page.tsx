@@ -13,6 +13,12 @@ export default function Galleri() {
   const [items, setItems] = useState<Media[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [active, setActive] = useState<Media | null>(null);
+  const [adminCode, setAdminCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('admin');
+    if (code) setAdminCode(code);
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -35,12 +41,29 @@ export default function Galleri() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const remove = useCallback(async (m: Media) => {
+    if (!adminCode) return;
+    if (!confirm('Slette denne for godt?')) return;
+    try {
+      const r = await fetch('/api/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: m.url, code: adminCode }),
+      });
+      if (!r.ok) { alert('Kunne ikke slette: ' + (await r.json()).error); return; }
+      setItems((prev) => prev.filter((x) => x.url !== m.url));
+      setActive(null);
+    } catch (e) {
+      alert('Feil ved sletting');
+    }
+  }, [adminCode]);
+
   return (
     <main className="gallery-wrap">
       <Brand subtitle="Bildene som strømmer inn fra dagen" />
 
       <div className="gal-head">
-        <h2>Galleriet</h2>
+        <h2>Galleriet{adminCode ? ' · admin' : ''}</h2>
         <span className="count">{items.length} {items.length === 1 ? 'fil' : 'filer'} · oppdateres live</span>
         <Link href="/" className="btn secondary" style={{ marginTop: 0 }}>+ Last opp</Link>
       </div>
@@ -51,14 +74,19 @@ export default function Galleri() {
 
       <div className="grid">
         {items.map((m) => (
-          <div key={m.url} className="tile" onClick={() => setActive(m)}>
-            {isVideo(m.pathname) ? (
-              <>
-                <video src={m.url} preload="metadata" muted playsInline />
-                <div className="play">▶</div>
-              </>
-            ) : (
-              <Image src={m.url} alt="" fill sizes="(max-width: 700px) 33vw, 150px" unoptimized={false} />
+          <div key={m.url} className="tile">
+            <div className="tile-inner" onClick={() => setActive(m)}>
+              {isVideo(m.pathname) ? (
+                <>
+                  <video src={m.url} preload="metadata" muted playsInline />
+                  <div className="play">▶</div>
+                </>
+              ) : (
+                <Image src={m.url} alt="" fill sizes="(max-width: 700px) 33vw, 150px" />
+              )}
+            </div>
+            {adminCode && (
+              <button className="del" title="Slett" onClick={(e) => { e.stopPropagation(); remove(m); }}>✕</button>
             )}
           </div>
         ))}
@@ -70,7 +98,10 @@ export default function Galleri() {
           {isVideo(active.pathname)
             ? <video src={active.url} controls autoPlay playsInline />
             : <img src={active.url} alt="" />}
-          <div className="dl"><a href={active.url} download target="_blank" rel="noreferrer">Last ned original</a></div>
+          <div className="dl">
+            <a href={active.url} download target="_blank" rel="noreferrer">Last ned original</a>
+            {adminCode && <button className="lb-del" onClick={() => remove(active)}>Slett</button>}
+          </div>
         </div>
       )}
     </main>
