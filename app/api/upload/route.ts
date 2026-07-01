@@ -15,7 +15,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           'video/mp4', 'video/quicktime', 'video/webm', 'video/x-m4v',
         ],
         addRandomSuffix: true,
-        maximumSizeInBytes: 500 * 1024 * 1024, // 500 MB per fil (rom for video)
+        // Ingen maks per fil — full oppløsning og lange videoer tillatt (Blob-grensen er 5 TB).
       }),
       onUploadCompleted: async () => {
         // valgfritt: her kunne vi logget/varslet ved fullført opplasting
